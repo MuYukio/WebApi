@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
-import { getUsersCollection } from "@lib/mongodb"
+import { getUsersCollection } from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
 
 
 export async function GET() {
@@ -43,47 +44,44 @@ export async function POST(req) {
 }
 
 export async function PUT(req) {
+  try {
+    const collection = await getUsersCollection();
+    const { id, userName, senha } = await req.json();
 
-    try{
-        const collection = await getUsersCollection()
-        const { id, userName,senha } = await req.json()
-
-        if( !id ){
-            return NextResponse.json(
-                { error: "Informe o ID do usuário para atualizar"},
-                { status: 400}
-            )
-        }
-        const updateDoc = {};
-        if(userName) updateDoc.userName = userName;
-        if(senha) updateDoc.senha = senha;
-
-        const resposta = await collection.updateOne(
-            {id: new Object(id)},
-            { $set: updateDoc}
-        )
-
-        if(resposta.matchedCount === 0){
-            return NextResponse.json(
-                { error: "usuario nao encontrado" },
-                { status: 404}
-            )
-        }
-
-        return NextResponse.json(
-            { message: "usuario atualizado com sucesso"},
-            { status: 200 }
-        )
-
-    }catch(err){
-        console.log("erro no PUT",err)
-        return NextResponse.json(
-            { error:"ERRO AO ATUALIZAR USUARIO" },
-            { status: 500}
-        )
-
+    if (!id) {
+      return NextResponse.json(
+        { error: "Informe o ID do usuário para atualizar" },
+        { status: 400 }
+      );
     }
-    
+
+    const updateDoc = {};
+    if (userName) updateDoc.userName = userName;
+    if (senha) updateDoc.senha = senha;
+
+    const resposta = await collection.updateOne(
+      { _id: new ObjectId(id) },   
+      { $set: updateDoc }
+    );
+
+    if (resposta.matchedCount === 0) {
+      return NextResponse.json(
+        { error: "Usuário não encontrado" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Usuário atualizado com sucesso" },
+      { status: 200 }
+    );
+  } catch (err) {
+    console.error("erro no PUT", err);
+    return NextResponse.json(
+      { error: "ERRO AO ATUALIZAR USUÁRIO" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function DELETE(req) {
