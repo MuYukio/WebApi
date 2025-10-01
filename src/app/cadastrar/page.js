@@ -3,9 +3,7 @@
 import { useState } from "react";
 
 
-
-
-export default function page(){
+export default function Page(){
 
     const [userName,setNome] = useState()
     const [senha,setSenha] = useState()
@@ -14,7 +12,7 @@ export default function page(){
 
         try{
             event.preventDefault();
-            const resposta = await fetch("http://localhost:3000/api/users",{
+            const resposta = await fetch("/api/users",{
                 method:"POST",
                 headers:{"Content-type":"Application/json"},
                 body: JSON.stringify({userName: userName, senha:senha})
