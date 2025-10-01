@@ -1,5 +1,5 @@
 import { cookies } from  "next/headers"
-import { getUsersCollection } from "@/lib/mongodb";
+import { getUsersCollection } from "../../../../../lib/mongodb";
 import { ObjectId } from "mongodb"
 import { redirect } from "next/dist/server/api-utils"
 

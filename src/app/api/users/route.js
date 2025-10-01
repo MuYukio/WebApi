@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getUsersCollection } from "@/lib/mongodb";
+import { getUsersCollection } from "../../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 
 
